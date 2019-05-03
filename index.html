@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Etch-A-Sketch</title>
+    </head>
+    <style>
+        #container{
+            font-size: 0;
+            position: absolute;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%);
+            padding: 10px;
+            display: grid;
+        }
+        
+        #reset{
+            background-color: lightgray;
+            border: 3px solid transparent;
+            padding: 15px 17px;
+            outline: none !important;
+            cursor: pointer;
+            color: #888888;
+            font-weight: bold;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+        
+        #reset:hover{
+            border: 3px solid lightgray;
+            box-shadow: 2px 2px 5px -2px;
+            background-color: #E8E8E8;
+            color: black;
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+        
+        h1{
+            color: lightskyblue;
+            margin-top: 0;
+            font-size: 50px;
+            -webkit-text-stroke: 2px blue;
+        }
+    </style>
+    <body>
+        <center><h1>Etch-A-Sketch</h1>
+        <button id="reset">Reset</button>
+        <div id="container">
+            
+        </div></center>
+    </body>
+    <script>
+        var size = 16; // Starting number of squares per side. 16*16
+        const resolutionSize = 640; // Constant resolution size so the grid size doesn't get affected by square size.
+        var squareSize = resolutionSize / size; // Square width/height.
+        const container = document.querySelector('#container'); // Gets the container div.
+        
+        const createSquares = () => { // Creates all the square divs.
+            for(var i = 0; i <= size*size; i++){
+                const square = document.createElement('div');
+                square.classList.add('squares');
+
+                container.appendChild(square);
+            }
+        }
+        
+        const squaresHover = () => { // Paints every square div black and adds hover effect.
+            const squares = document.querySelectorAll('.squares');
+            squares.forEach((square) => {
+                square.style.backgroundColor = 'black';
+                square.addEventListener('mouseover', () => {
+                    square.style.backgroundColor = 'blue';
+                });
+            });
+        }
+        
+        const updateGrid = () => { // Updates the grid. Starting with: repeat 16 * (640/16)[px] or 16 * 40px.
+            container.style  = 
+                'grid-template-rows: repeat(' + size + ',' + squareSize + 'px); ' +
+                'grid-template-columns: repeat(' + size + ',' + squareSize + 'px);';
+        }
+        
+        //Functions intialized at start to create squares and grid.
+        createSquares();
+        squaresHover();
+        updateGrid();
+        
+        let i = 0;
+        const resetGrid = () => { // Function for button event. Prompts for size & resets everything with the new size number.
+            size = prompt('Enter number of sides: ');
+            if(isNaN(size) === true) { 
+                i = i+1;
+                if(i === 5) { alert('Wow, you are really stubborn!'); i = 0; return; }
+                resetGrid(); 
+            }
+            squareSize = resolutionSize / size;
+            createSquares();
+            squaresHover();
+            updateGrid();
+        }
+        
+        const reset = document.querySelector('#reset'); // Selects the button into a const named reset.
+        reset.addEventListener('click', resetGrid); // Adds the resetButton function to the button.
+    </script>
+</html>
